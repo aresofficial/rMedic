@@ -7,7 +7,7 @@ namespace rMedic.Models
         #region Private fields
         private int _id;
         private Medicament _medicament;
-        private double _count;      
+        private double _count;
         private DateTime _received;
         private DateTime _expiration;
         #endregion
@@ -15,9 +15,10 @@ namespace rMedic.Models
         #region Public properties
         public int Id { get => _id; set => _id = value; }
         public Medicament Medicament { get => _medicament; set => _medicament = value; }
-        public double Count { get => Math.Round(_count, 2); set => _count = value; }
+        public double Count { get => Math.Round(_count, 3); set => _count = value; }
         public DateTime Received { get => _received; set => _received = value; }
         public DateTime Expiration { get => _expiration; set => _expiration = value; }
+        public decimal Amount { get => decimal.Round(Medicament.Price * (decimal)Count, 2, MidpointRounding.AwayFromZero); }
         #endregion
     }
 }

@@ -36,14 +36,14 @@ namespace rMedic.ViewModels
                         Id = 1,
                         Name = "Цитрамон",
                         Description = "Описание товара",
-                        Price = 6523.1252m,
+                        Price = 6523.1251231232m,
                     Manufacturer = new Manufacturer {
                         Id = 1,
                         Name = "Дарница",
                         Phone = "0508383555",
                         Address = "г. Дарница" },
                         Unit = Unit.Pills },
-                    Count = 5,
+                    Count = 3.666,
                     Expiration = DateTime.Now,
                     Received = DateTime.Now
                 }
@@ -69,7 +69,7 @@ namespace rMedic.ViewModels
                         Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" },
                         Unit = Unit.Pills
                     },
-                    Count = 5,
+                    Count = 1,
                     Expiration = DateTime.Now,
                     Received = DateTime.Now
                 });

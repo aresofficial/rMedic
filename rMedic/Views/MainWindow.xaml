@@ -34,9 +34,10 @@
                     <GridView.Columns>
                         <GridViewColumn Header="№" DisplayMemberBinding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"/>
                         <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Medicament.Name}"/>
-                        <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Medicament.Price, StringFormat={}{0} грн}"/>
                         <GridViewColumn Header="Производитель" DisplayMemberBinding="{Binding Medicament.Manufacturer.Name}"/>
+                        <GridViewColumn Header="Цена за единицу" DisplayMemberBinding="{Binding Medicament.Price, StringFormat={}{0} грн}"/>
                         <GridViewColumn Header="Количество" DisplayMemberBinding="{Binding Count}"/>
+                        <GridViewColumn Header="Сумма" DisplayMemberBinding="{Binding Amount, StringFormat={}{0} грн}"/>
                         <GridViewColumn Header="Дата получения" DisplayMemberBinding="{Binding Received, StringFormat=d}"/>
                     </GridView.Columns>
                 </GridView>
