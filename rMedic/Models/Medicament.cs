@@ -10,6 +10,7 @@ namespace rMedic.Models
         private string _description;
         private Manufacturer _manufacturer;
         private decimal _price;
+        private Unit _unit;
         #endregion
 
         #region Public properties
@@ -26,6 +27,7 @@ namespace rMedic.Models
         }
         public Manufacturer Manufacturer { get => _manufacturer; set => _manufacturer = value; }
         public decimal Price { get => decimal.Round(_price, 2, MidpointRounding.AwayFromZero); set => _price = value; }
+        public Unit Unit { get => _unit; set => _unit = value; }
         #endregion
     }
 }

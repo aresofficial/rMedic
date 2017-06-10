@@ -82,7 +82,9 @@
     </Compile>
     <Compile Include="Converters\ListItemToIndexConverter.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\MedicamentRecord.cs" />
     <Compile Include="Models\Medicament.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />

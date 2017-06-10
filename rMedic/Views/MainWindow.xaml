@@ -10,7 +10,7 @@
         xmlns:Converters="clr-namespace:rMedic.Converters"
         xmlns:Settings="clr-namespace:rMedic.Properties"
         mc:Ignorable="d"
-        Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" Height="350" Width="525">
+        Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" MinWidth="850" Width="850" MinHeight="570" Height="570">
     <Window.InputBindings>
         <KeyBinding Command="{Binding AddNewMedicamentCommand}" Key="F1"/>
     </Window.InputBindings>
@@ -28,15 +28,16 @@
         <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
             <MenuItem Header="Товар" Command="{Binding AddNewMedicamentCommand}" />
         </Menu>
-        <ListView HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding Medicaments}">
+        <ListView HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding MedicamentRecords}">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
                         <GridViewColumn Header="№" DisplayMemberBinding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"/>
-                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}"/>
-                        <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Price, StringFormat={}{0} грн}"/>
-                        <GridViewColumn Header="Производитель" DisplayMemberBinding="{Binding Manufacturer.Name}"/>
-                        <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}"/>
+                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Medicament.Name}"/>
+                        <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Medicament.Price, StringFormat={}{0} грн}"/>
+                        <GridViewColumn Header="Производитель" DisplayMemberBinding="{Binding Medicament.Manufacturer.Name}"/>
+                        <GridViewColumn Header="Количество" DisplayMemberBinding="{Binding Count}"/>
+                        <GridViewColumn Header="Дата получения" DisplayMemberBinding="{Binding Received, StringFormat=d}"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

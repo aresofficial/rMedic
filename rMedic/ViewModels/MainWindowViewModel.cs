@@ -16,7 +16,7 @@ namespace rMedic.ViewModels
         #endregion
 
         #region Public properties
-        public ObservableCollection<Medicament> Medicaments { get; set; }
+        public ObservableCollection<MedicamentRecord> MedicamentRecords { get; set; }
 
         public ICommand AddNewMedicamentCommand
         {
@@ -28,11 +28,24 @@ namespace rMedic.ViewModels
         public MainWindowViewModel()
         {
             //Example data
-            Medicaments = new ObservableCollection<Medicament>()
+            MedicamentRecords = new ObservableCollection<MedicamentRecord>()
             {
-                new Medicament {
-                    Id = 1, Name = "Цитрамон", Description = "Описание товара", Price = 6523.1252m,
-                    Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" }
+                new MedicamentRecord {
+                    Id = 1,
+                    Medicament = new Medicament{
+                        Id = 1,
+                        Name = "Цитрамон",
+                        Description = "Описание товара",
+                        Price = 6523.1252m,
+                    Manufacturer = new Manufacturer {
+                        Id = 1,
+                        Name = "Дарница",
+                        Phone = "0508383555",
+                        Address = "г. Дарница" },
+                        Unit = Unit.Pills },
+                    Count = 5,
+                    Expiration = DateTime.Now,
+                    Received = DateTime.Now
                 }
             };
         }
@@ -44,7 +57,22 @@ namespace rMedic.ViewModels
             //Example data for testing command
             try
             {
-                Medicaments.Add(new Medicament { Id = 2, Name = "тест", Description = "Описание товара", Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0661111111", Address = "г. Дарница" } });
+                MedicamentRecords.Add(new MedicamentRecord
+                {
+                    Id = 1,
+                    Medicament = new Medicament
+                    {
+                        Id = 1,
+                        Name = "Цитрамон",
+                        Description = "Описание товара",
+                        Price = 6523.1252m,
+                        Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" },
+                        Unit = Unit.Pills
+                    },
+                    Count = 5,
+                    Expiration = DateTime.Now,
+                    Received = DateTime.Now
+                });
             }
             catch (ArgumentException)
             {
