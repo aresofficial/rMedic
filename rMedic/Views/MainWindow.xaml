@@ -4,9 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:rMedic"
+        xmlns:Models="clr-namespace:rMedic.Models"
+        xmlns:Views="clr-namespace:rMedic.Views"
+        xmlns:ViewModels="clr-namespace:rMedic.ViewModels"
         mc:Ignorable="d"
         Title="rMedic" WindowStartupLocation="CenterScreen" Height="350" Width="525">
+    <Window.DataContext>
+        <ViewModels:MainWindowViewModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="18"/>
+            <RowDefinition Height="292*"/>
+        </Grid.RowDefinitions>
+        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
+            <MenuItem Header="Товар" Command="{Binding AddNewMedicamentCommand}"/>
+        </Menu>
+        <ListBox HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding Medicaments}" DisplayMemberPath="Name"/>
     </Grid>
 </Window>
