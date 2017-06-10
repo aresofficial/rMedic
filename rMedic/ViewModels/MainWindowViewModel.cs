@@ -31,7 +31,7 @@ namespace rMedic.ViewModels
             Medicaments = new ObservableCollection<Medicament>()
             {
                 new Medicament {
-                    Id = 1, Name = "Цитрамон", Description = "Описание товара",
+                    Id = 1, Name = "Цитрамон", Description = "Описание товара", Price = 6523.1252m,
                     Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" }
                 }
             };
@@ -42,7 +42,14 @@ namespace rMedic.ViewModels
         private void AddNewMedicament(object param)
         {
             //Example data for testing command
-            Medicaments.Add(new Medicament { Id = 2, Name = "тест", Description = "Описание товара", Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" } });
+            try
+            {
+                Medicaments.Add(new Medicament { Id = 2, Name = "тест", Description = "Описание товара", Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0661111111", Address = "г. Дарница" } });
+            }
+            catch (ArgumentException)
+            {
+                System.Windows.MessageBox.Show("Error!");
+            }
         }
         #endregion
     }

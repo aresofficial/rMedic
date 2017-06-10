@@ -7,19 +7,39 @@
         xmlns:Models="clr-namespace:rMedic.Models"
         xmlns:Views="clr-namespace:rMedic.Views"
         xmlns:ViewModels="clr-namespace:rMedic.ViewModels"
+        xmlns:Converters="clr-namespace:rMedic.Converters"
+        xmlns:Settings="clr-namespace:rMedic.Properties"
         mc:Ignorable="d"
-        Title="rMedic" WindowStartupLocation="CenterScreen" Height="350" Width="525">
+        Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" Height="350" Width="525">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding AddNewMedicamentCommand}" Key="F1"/>
+    </Window.InputBindings>
     <Window.DataContext>
         <ViewModels:MainWindowViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Converters:ListItemToIndexConverter x:Key="IndexConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="18"/>
             <RowDefinition Height="292*"/>
         </Grid.RowDefinitions>
         <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
-            <MenuItem Header="Товар" Command="{Binding AddNewMedicamentCommand}"/>
+            <MenuItem Header="Товар" Command="{Binding AddNewMedicamentCommand}" />
         </Menu>
-        <ListBox HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding Medicaments}" DisplayMemberPath="Name"/>
+        <ListView HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding Medicaments}">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="№" DisplayMemberBinding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"/>
+                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Price, StringFormat={}{0} грн}"/>
+                        <GridViewColumn Header="Производитель" DisplayMemberBinding="{Binding Manufacturer.Name}"/>
+                        <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
