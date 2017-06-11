@@ -9,6 +9,7 @@ namespace rMedic.Models
         private int _id;
         private string _name;
         private string _description;
+        private int? _manufacturerId;
         private Manufacturer _manufacturer;
         private decimal _price;
         private Unit _unit;
@@ -30,7 +31,11 @@ namespace rMedic.Models
         public Unit Unit { get => _unit; set => _unit = value; }
         #endregion
 
-        #region Virtual Properties
+        #region Foreign Keys
+        public int? ManufacturerId { get => _manufacturerId; set => _manufacturerId = value; }
+        #endregion
+
+        #region Navigation Properties
         public virtual Manufacturer Manufacturer { get => _manufacturer; set => _manufacturer = value; }
         public virtual ICollection<MedicamentRecord> MedicamentRecords { get; set; }
         #endregion
