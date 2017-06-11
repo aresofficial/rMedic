@@ -7,7 +7,7 @@ namespace rMedic.Helpers
         #region String Extensions
         public static bool PhoneNumberIsValid(this string str)
         {
-            return !string.IsNullOrWhiteSpace(str) && !Regex.IsMatch(str, @"^[0-9]+$");
+            return !string.IsNullOrWhiteSpace(str) && Regex.IsMatch(str, @"^[0-9]+$");
         }
         public static string FormatPhoneNumber(this string number)
         {
