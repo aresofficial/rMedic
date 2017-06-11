@@ -1,4 +1,5 @@
-﻿using rMedic.Models;
+﻿using rMedic.Data;
+using rMedic.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,12 +12,14 @@ namespace rMedic.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        #region Private fields
+        #region Private Fields
         private ICommand _addNewMedicamentCommand;
         #endregion
 
-        #region Public properties
-        public ObservableCollection<MedicamentRecord> MedicamentRecords { get; set; }
+        #region Public Properties
+        public RMedicDbContext Context { get; set; }
+
+        public ObservableCollection<MedicamentRecord> MedicamentRecords { get => new ObservableCollection<MedicamentRecord>(Context.MedicamentRecords.ToList()); }
 
         public ICommand AddNewMedicamentCommand
         {
@@ -27,31 +30,11 @@ namespace rMedic.ViewModels
         #region Constructor
         public MainWindowViewModel()
         {
-            //Example data
-            MedicamentRecords = new ObservableCollection<MedicamentRecord>()
-            {
-                new MedicamentRecord {
-                    Id = 1,
-                    Medicament = new Medicament{
-                        Id = 1,
-                        Name = "Цитрамон",
-                        Description = "Описание товара",
-                        Price = 6523.1251231232m,
-                    Manufacturer = new Manufacturer {
-                        Id = 1,
-                        Name = "Дарница",
-                        Phone = "0508383555",
-                        Address = "г. Дарница" },
-                        Unit = Unit.Pills },
-                    Count = 3.666,
-                    Expiration = DateTime.Now,
-                    Received = DateTime.Now
-                }
-            };
+            Context = new RMedicDbContext();
         }
         #endregion
 
-        #region Private methods
+        #region Private Methods
         private void AddNewMedicament(object param)
         {
             //Example data for testing command

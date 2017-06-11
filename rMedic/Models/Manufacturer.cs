@@ -1,11 +1,12 @@
 ﻿using System;
 using rMedic.Helpers;
+using System.Collections.Generic;
 
 namespace rMedic.Models
 {
     public class Manufacturer
     {
-        #region Private members
+        #region Private Members
         private int _id;
         private string _name;
         private string _address;
@@ -29,6 +30,10 @@ namespace rMedic.Models
             get => _phone.FormatPhoneNumber();
             set => _phone = (!value.PhoneNumberIsValid()) ? throw new ArgumentException() : value;
         }
+        #endregion
+
+        #region Virtual Properties
+        public virtual ICollection<Medicament> Medicaments { get; set; }
         #endregion
     }
 }
