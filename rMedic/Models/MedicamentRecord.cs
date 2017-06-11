@@ -7,6 +7,7 @@ namespace rMedic.Models
     {
         #region Private Fields
         private int _id;
+        private int? _medicamentId;
         private Medicament _medicament;
         private double _count;
         private DateTime _received;
@@ -22,7 +23,11 @@ namespace rMedic.Models
         public decimal Amount { get => decimal.Round(Medicament.Price * (decimal)Count, 2, MidpointRounding.AwayFromZero); }
         #endregion
 
-        #region Virtual Properties
+        #region Foreign Keys
+        public int? MedicamentId { get => _medicamentId; set => _medicamentId = value; }
+        #endregion
+
+        #region Navigation Properties
         public virtual Medicament Medicament { get => _medicament; set => _medicament = value; }
         #endregion
     }

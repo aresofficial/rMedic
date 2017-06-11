@@ -14,7 +14,7 @@ namespace rMedic.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private Fields
-        private ICommand _addNewMedicamentCommand;
+        private ICommand _addNewMedicamentRecordCommand;
         #endregion
 
         #region Events
@@ -26,9 +26,9 @@ namespace rMedic.ViewModels
 
         public ObservableCollection<MedicamentRecord> MedicamentRecords { get; private set; }
 
-        public ICommand AddNewMedicamentCommand
+        public ICommand AddNewMedicamentRecordCommand
         {
-            get => _addNewMedicamentCommand = new RelayCommand(AddNewMedicament);
+            get => _addNewMedicamentRecordCommand = new RelayCommand(AddNewMedicamentRecord);
         }
         #endregion
 
@@ -44,17 +44,24 @@ namespace rMedic.ViewModels
         private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Add(e.Record);
-            Context.SaveChanges();
+            Context.SaveChangesAsync();
         }
         #endregion
 
         #region Private Methods
-        private void AddNewMedicament(object param)
+        private void AddNewMedicamentRecord(object param)
         {
             //Example data for testing command
-            var medicRecord = new MedicamentRecord { Medicament = Context.Medicaments.FirstOrDefault(), Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
-            MedicamentRecords.Add(medicRecord);
-            AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
+            try
+            {
+                var medicRecord = new MedicamentRecord { MedicamentId = 1, Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
+                MedicamentRecords.Add(medicRecord);
+                AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
+            }
+            catch (Exception)
+            {
+                System.Windows.MessageBox.Show("Не удалось добавить новую запись!");
+            }
         }
         #endregion
     }
