@@ -14,7 +14,7 @@ namespace rMedic.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private Fields
-        private ICommand _addNewMedicamentRecordCommand;
+        private ICommand _addNewMedicamentCommand;
         #endregion
 
         #region Events
@@ -26,9 +26,9 @@ namespace rMedic.ViewModels
 
         public ObservableCollection<MedicamentRecord> MedicamentRecords { get; private set; }
 
-        public ICommand AddNewMedicamentRecordCommand
+        public ICommand AddNewMedicamentCommand
         {
-            get => _addNewMedicamentRecordCommand = new RelayCommand(AddNewMedicamentRecord);
+            get => _addNewMedicamentCommand = new RelayCommand(AddNewMedicament);
         }
         #endregion
 
@@ -44,24 +44,17 @@ namespace rMedic.ViewModels
         private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Add(e.Record);
-            Context.SaveChangesAsync();
+            Context.SaveChanges();
         }
         #endregion
 
         #region Private Methods
-        private void AddNewMedicamentRecord(object param)
+        private void AddNewMedicament(object param)
         {
             //Example data for testing command
-            try
-            {
-                var medicRecord = new MedicamentRecord { MedicamentId = 1, Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
-                MedicamentRecords.Add(medicRecord);
-                AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
-            }
-            catch (Exception)
-            {
-                System.Windows.MessageBox.Show("Не удалось добавить новую запись!");
-            }
+            var medicRecord = new MedicamentRecord { Medicament = Context.Medicaments.FirstOrDefault(), Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
+            MedicamentRecords.Add(medicRecord);
+            AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
         }
         #endregion
     }

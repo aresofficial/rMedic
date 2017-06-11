@@ -26,7 +26,7 @@
             <RowDefinition Height="292*"/>
         </Grid.RowDefinitions>
         <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
-            <MenuItem Header="Товар" Command="{Binding AddNewMedicamentRecordCommand}" />
+            <MenuItem Header="Товар" Command="{Binding AddNewMedicamentCommand}" />
         </Menu>
         <ListView HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding MedicamentRecords}">
             <ListView.View>

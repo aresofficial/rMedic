@@ -6,7 +6,7 @@ namespace rMedic.Models
 {
     public class Manufacturer
     {
-        #region Private Fields
+        #region Private Members
         private int _id;
         private string _name;
         private string _address;
@@ -32,7 +32,7 @@ namespace rMedic.Models
         }
         #endregion
 
-        #region Navigation Properties
+        #region Virtual Properties
         public virtual ICollection<Medicament> Medicaments { get; set; }
         #endregion
     }
