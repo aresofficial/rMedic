@@ -1,5 +1,6 @@
 ﻿using rMedic.Data;
 using rMedic.Models;
+using rMedic.Models.Events;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,10 +17,14 @@ namespace rMedic.ViewModels
         private ICommand _addNewMedicamentCommand;
         #endregion
 
+        #region Events
+        public event EventHandler<AddMedicamentRecordEventArgs> AddMedicamentRecord;
+        #endregion
+
         #region Public Properties
         public RMedicDbContext Context { get; set; }
 
-        public ObservableCollection<MedicamentRecord> MedicamentRecords { get => new ObservableCollection<MedicamentRecord>(Context.MedicamentRecords.ToList()); }
+        public ObservableCollection<MedicamentRecord> MedicamentRecords { get; private set; }
 
         public ICommand AddNewMedicamentCommand
         {
@@ -31,6 +36,15 @@ namespace rMedic.ViewModels
         public MainWindowViewModel()
         {
             Context = new RMedicDbContext();
+            MedicamentRecords = new ObservableCollection<MedicamentRecord>(Context.MedicamentRecords.ToList());
+
+            AddMedicamentRecord += MainWindowViewModel_AddMedicamentRecord;
+        }
+
+        private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
+        {
+            Context.MedicamentRecords.Add(e.Record);
+            Context.SaveChanges();
         }
         #endregion
 
@@ -38,29 +52,9 @@ namespace rMedic.ViewModels
         private void AddNewMedicament(object param)
         {
             //Example data for testing command
-            try
-            {
-                MedicamentRecords.Add(new MedicamentRecord
-                {
-                    Id = 1,
-                    Medicament = new Medicament
-                    {
-                        Id = 1,
-                        Name = "Цитрамон",
-                        Description = "Описание товара",
-                        Price = 6523.1252m,
-                        Manufacturer = new Manufacturer { Id = 1, Name = "Дарница", Phone = "0508383555", Address = "г. Дарница" },
-                        Unit = Unit.Pills
-                    },
-                    Count = 1,
-                    Expiration = DateTime.Now,
-                    Received = DateTime.Now
-                });
-            }
-            catch (ArgumentException)
-            {
-                System.Windows.MessageBox.Show("Error!");
-            }
+            var medicRecord = new MedicamentRecord { Medicament = Context.Medicaments.FirstOrDefault(), Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
+            MedicamentRecords.Add(medicRecord);
+            AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
         }
         #endregion
     }

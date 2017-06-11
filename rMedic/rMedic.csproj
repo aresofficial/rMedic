@@ -88,6 +88,7 @@
     <Compile Include="Data\RMedicDbInitializer.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\Events\AddMedicamentRecordEventArgs.cs" />
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\MedicamentRecord.cs" />
     <Compile Include="Models\Medicament.cs" />
