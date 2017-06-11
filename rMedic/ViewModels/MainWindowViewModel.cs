@@ -40,12 +40,6 @@ namespace rMedic.ViewModels
 
             AddMedicamentRecord += MainWindowViewModel_AddMedicamentRecord;
         }
-
-        private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
-        {
-            Context.MedicamentRecords.Add(e.Record);
-            Context.SaveChangesAsync();
-        }
         #endregion
 
         #region Private Methods
@@ -62,6 +56,12 @@ namespace rMedic.ViewModels
             {
                 System.Windows.MessageBox.Show("Не удалось добавить новую запись!");
             }
+        }
+
+        private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
+        {
+            Context.MedicamentRecords.Add(e.Record);
+            Context.SaveChanges();
         }
         #endregion
     }
