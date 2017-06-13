@@ -10,13 +10,14 @@
         xmlns:Converters="clr-namespace:rMedic.Converters"
         xmlns:Settings="clr-namespace:rMedic.Properties"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=ViewModels:MainWindowViewModel}"
         Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" MinWidth="850" Width="850" MinHeight="570" Height="570">
-    <Window.InputBindings>
-        <KeyBinding Command="{Binding AddNewMedicamentCommand}" Key="F1"/>
-    </Window.InputBindings>
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <ViewModels:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding AddNewMedicamentRecordCommand}" Key="F1" />
+    </Window.InputBindings>
     <Window.Resources>
         <Converters:ListItemToIndexConverter x:Key="IndexConverter"/>
     </Window.Resources>

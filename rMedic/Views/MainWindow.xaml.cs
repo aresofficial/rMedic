@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using rMedic.Data;
 using rMedic.Models;
+using rMedic.ViewModels;
 
 namespace rMedic.Views
 {
@@ -25,6 +26,7 @@ namespace rMedic.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

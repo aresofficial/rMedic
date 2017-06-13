@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace rMedic.ViewModels
@@ -14,6 +16,7 @@ namespace rMedic.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private Fields
+        private object _medicamenRecordsLock = new object();
         private ICommand _addNewMedicamentRecordCommand;
         #endregion
 
@@ -28,7 +31,8 @@ namespace rMedic.ViewModels
 
         public ICommand AddNewMedicamentRecordCommand
         {
-            get => _addNewMedicamentRecordCommand = new RelayCommand(AddNewMedicamentRecord);
+            get => _addNewMedicamentRecordCommand;
+            set => _addNewMedicamentRecordCommand = value;
         }
         #endregion
 
@@ -36,32 +40,39 @@ namespace rMedic.ViewModels
         public MainWindowViewModel()
         {
             Context = new RMedicDbContext();
-            MedicamentRecords = new ObservableCollection<MedicamentRecord>(Context.MedicamentRecords.ToList());
+            MedicamentRecords = new ObservableCollection<MedicamentRecord>(Context.MedicamentRecords);
+            BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamenRecordsLock);
 
+            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord);
             AddMedicamentRecord += MainWindowViewModel_AddMedicamentRecord;
         }
         #endregion
 
         #region Private Methods
-        private void AddNewMedicamentRecord(object param)
+        private async Task AddNewMedicamentRecord(object param)
         {
             //Example data for testing command
-            try
+            await Task.Run(/*async */() =>
             {
-                var medicRecord = new MedicamentRecord { MedicamentId = 1, Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
-                MedicamentRecords.Add(medicRecord);
-                AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
+                try
+                {
+                    //await Task.Delay(1000);
+                    var medicRecord = new MedicamentRecord { MedicamentId = 1, Count = 111, Received = DateTime.Now, Expiration = DateTime.Now };
+                    MedicamentRecords.Add(medicRecord);
+                    AddMedicamentRecord(this, new AddMedicamentRecordEventArgs() { Record = medicRecord });
+                }
+                catch (Exception)
+                {
+                    System.Windows.MessageBox.Show("Не удалось добавить новую запись!");
+                }
             }
-            catch (Exception)
-            {
-                System.Windows.MessageBox.Show("Не удалось добавить новую запись!");
-            }
+            );           
         }
 
         private void MainWindowViewModel_AddMedicamentRecord(object sender, AddMedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Add(e.Record);
-            Context.SaveChanges();
+            Context.SaveChangesAsync();
         }
         #endregion
     }
