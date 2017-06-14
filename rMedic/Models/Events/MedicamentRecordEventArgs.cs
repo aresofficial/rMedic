@@ -2,7 +2,7 @@
 
 namespace rMedic.Models.Events
 {
-    public class AddMedicamentRecordEventArgs : EventArgs
+    public class MedicamentRecordEventArgs : EventArgs
     {
         public MedicamentRecord Record { get; set; }
     }

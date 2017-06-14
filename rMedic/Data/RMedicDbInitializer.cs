@@ -18,7 +18,7 @@ namespace rMedic.Data
         {
             //for testing
             var manuf = new Manufacturer { Name = "Дарница", Address = "г. Дарница", Phone = "0503567890" };
-            var medic = new Medicament { Name = "Цитрамон №14", Description = "Обезбаливающие", Manufacturer = manuf, Price = 256.42m, Unit = Unit.Pills };
+            var medic = new Medicament { Name = "Цитрамон №14", Description = "Обезбаливающие", Manufacturer = manuf, Price = 14.24m, Unit = Unit.Pills };
             var medicRecord = new MedicamentRecord { Medicament = medic, Count = 1.666, Received = DateTime.Now, Expiration = DateTime.Now };
             context.MedicamentRecords.Add(medicRecord);
             context.SaveChanges();

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using rMedic.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace rMedic.Models
 {
-    public class Medicament
+    public class Medicament : ViewModelBase
     {
         #region Private Fields
         private int _id;
@@ -27,7 +28,11 @@ namespace rMedic.Models
             get => _description;
             set => _description = (string.IsNullOrWhiteSpace(value)) ? throw new ArgumentNullException() : value;
         }
-        public decimal Price { get => decimal.Round(_price, 2, MidpointRounding.AwayFromZero); set => _price = value; }
+        public decimal Price
+        {
+            get => decimal.Round(_price, 2, MidpointRounding.AwayFromZero);
+            set { _price = value; OnPropertyChanged(); }
+        }
         public Unit Unit { get => _unit; set => _unit = value; }
         #endregion
 
