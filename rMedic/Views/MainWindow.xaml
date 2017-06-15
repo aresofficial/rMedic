@@ -37,6 +37,7 @@
         </DataTemplate>
         <Converters:ListItemToIndexConverter x:Key="IndexConverter"/>
         <Converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
+        <Converters:TotalConverter x:Key="TotalConverter"/>
     </Window.Resources>
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands HorizontalContentAlignment="Stretch" ShowLastSeparator="False">
@@ -100,8 +101,19 @@
             </ListView.View>
         </ListView>
         <StatusBar Grid.Row="2">
+            <StatusBarItem HorizontalAlignment="Left" VerticalContentAlignment="Center">
+                <TextBlock Text="{Binding MedicamentRecords.Count, StringFormat={}Записей: {0} шт., Mode=OneWay}"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal">
             <StatusBarItem HorizontalAlignment="Center" VerticalContentAlignment="Center">
-                <TextBlock Text="{Binding MedicamentRecords.Count, StringFormat={}Всего: {0} шт., Mode=OneWay}"/>
+                <TextBlock Text="{Binding FullNumber, StringFormat={}Количество: {0} ед.}"/>
+            </StatusBarItem>
+                    <Border Width="1" Margin="4" Background="#ffffff"/>
+                    <StatusBarItem Margin="0,0,0,0" HorizontalAlignment="Right" VerticalContentAlignment="Center">
+                <TextBlock Text="{Binding FullAmount, StringFormat={}Сумма: {0} грн.}"/>
+            </StatusBarItem>
+            </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>

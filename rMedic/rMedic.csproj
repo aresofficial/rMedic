@@ -93,6 +93,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AddMedicamentRecordWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -103,6 +107,7 @@
     </Compile>
     <Compile Include="Converters\EnumToStringConverter.cs" />
     <Compile Include="Converters\ListItemToIndexConverter.cs" />
+    <Compile Include="Converters\TotalConverter.cs" />
     <Compile Include="Data\RMedicDbContext.cs" />
     <Compile Include="Data\RMedicDbInitializer.cs" />
     <Compile Include="Helpers\Extensions.cs" />
@@ -117,11 +122,15 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="ViewModels\AddMedicamentRecordViewModel.cs" />
     <Compile Include="ViewModels\AsyncDelegateCommand.cs" />
     <Compile Include="ViewModels\Attributes\LocalizedDescriptionAttribute.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\AddMedicamentRecordWindow.xaml.cs">
+      <DependentUpon>AddMedicamentRecordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

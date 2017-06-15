@@ -22,7 +22,7 @@ namespace rMedic.Models
         public DateTime Received { get => _received; set { _received = value; OnPropertyChanged(); } }
         public DateTime Expiration { get => _expiration; set { _expiration = value; OnPropertyChanged(); } }
         [NotMapped]
-        public decimal Amount { get => decimal.Round(Medicament.Price * (decimal)Count, 2, MidpointRounding.AwayFromZero); }
+        public double Amount { get => Math.Round((double)Medicament.Price * Count, 2, MidpointRounding.AwayFromZero); }
         #endregion
 
         #region Foreign Keys

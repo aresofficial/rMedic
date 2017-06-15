@@ -4,6 +4,7 @@ using rMedic.Data;
 using rMedic.Helpers;
 using rMedic.Models;
 using rMedic.Models.Events;
+using rMedic.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +30,9 @@ namespace rMedic.ViewModels
         private bool _isEditMedicamentRecord = true;
         private bool _isAddedMedicamentRecord = true;
         private MedicamentRecord _selectedMedicamentRecord;
+
+        private double _fullAmount = 0;
+        private double _fullNumber = 0;
         #endregion
 
         #region Events
@@ -74,6 +78,23 @@ namespace rMedic.ViewModels
         public bool IsDeleteMedicamentRecord { get => _isDeleteMedicamentRecord; set { _isDeleteMedicamentRecord = value; OnPropertyChanged(); } }
         public bool IsEditMedicamentRecord { get => _isEditMedicamentRecord; set { _isEditMedicamentRecord = value; OnPropertyChanged(); } }
         public bool IsAddedMedicamentRecord { get => _isAddedMedicamentRecord; set { _isAddedMedicamentRecord = value; OnPropertyChanged(); } }
+
+        public double FullAmount
+        {
+            get => Math.Round(_fullAmount, 2, MidpointRounding.AwayFromZero);
+            set
+            {
+                _fullAmount = value; OnPropertyChanged();
+            }
+        }
+        public double FullNumber
+        {
+            get => Math.Round(_fullNumber, 3, MidpointRounding.AwayFromZero);
+            set
+            {
+                _fullNumber = value; OnPropertyChanged();
+            }
+        }
         #endregion
 
         #region Constructor
@@ -83,7 +104,8 @@ namespace rMedic.ViewModels
             MedicamentRecords = new ObservableCollection<MedicamentRecord>();
             BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamenRecordsLock);
 
-            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
+            //AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
+            AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
             LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords, can => IsLoadedData);
             EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsEditMedicamentRecord);
             DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsDeleteMedicamentRecord);
@@ -97,6 +119,14 @@ namespace rMedic.ViewModels
         #endregion
 
         #region Private Methods
+
+        private void AddTest(object param)
+        {
+            AddMedicamentRecordWindow addWindow = new AddMedicamentRecordWindow();
+            addWindow.Owner = Application.Current.MainWindow;
+            addWindow.ShowDialog();
+        }
+
         private async Task AddNewMedicamentRecord(object param)
         {
             //Example data for testing command
@@ -120,13 +150,23 @@ namespace rMedic.ViewModels
                 MedicamentRecords.Add(medicRecord);
                 AddMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = medicRecord });
             });
+            await LoadFullAmountAndNumber();
+        }
+
+        private async Task LoadFullAmountAndNumber()
+        {
+            await Task.Run(() =>
+            {
+                FullAmount = MedicamentRecords.Select(x => x.Amount).Aggregate((x, y) => x + y);
+                FullNumber = MedicamentRecords.Select(x => x.Count).Aggregate((x, y) => x + y);
+            });
         }
 
         private async Task LoadMedicamentRecords(object param)
         {
             //Example data for testing command
             IsLoadedData = false;
-            await Task.Run(() =>
+            await Task.Factory.StartNew(() =>
             {
                 MedicamentRecords.Clear();
                 foreach (var item in Context.MedicamentRecords)
@@ -135,6 +175,8 @@ namespace rMedic.ViewModels
                 }
             });
             IsLoadedData = true;
+            await Task.Delay(3000);
+            await LoadFullAmountAndNumber();
         }
 
         private async Task EditMedicamentRecord(object param)
@@ -161,6 +203,7 @@ namespace rMedic.ViewModels
                         record.Count = double.Parse(input);
                         EditMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
+                    await LoadFullAmountAndNumber();
                 }
                 IsEditMedicamentRecord = true;
             }
@@ -191,6 +234,7 @@ namespace rMedic.ViewModels
                         MedicamentRecords.Remove(med);
                         DeleteMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
+                    await LoadFullAmountAndNumber();
                 }
                 IsDeleteMedicamentRecord = true;
             }
