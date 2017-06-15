@@ -10,46 +10,99 @@
         xmlns:ViewModels="clr-namespace:rMedic.ViewModels"
         xmlns:Converters="clr-namespace:rMedic.Converters"
         xmlns:Settings="clr-namespace:rMedic.Properties"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=ViewModels:MainWindowViewModel}"
         GlowBrush="{DynamicResource AccentColorBrush}"
         TitleCaps="False"
-        Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" MinWidth="850" Width="850" MinHeight="570" Height="570">
+        IconTemplate="{DynamicResource IconTemplate}"
+        Title="{Binding Source={x:Static Settings:Settings.Default}, Path=Version, StringFormat={}rMedic: версия {0}}" WindowStartupLocation="CenterScreen" MinWidth="920" Width="920" MinHeight="570" Height="570" SaveWindowPosition="True" TitleAlignment="Center" TitlebarHeight="36" ShowSystemMenuOnRightClick="False" ShowIconOnTitleBar="True" ShowDialogsOverTitleBar="False" >
     <!--<Window.DataContext>
         <ViewModels:MainWindowViewModel/>
     </Window.DataContext>-->
     <Window.InputBindings>
         <KeyBinding Command="{Binding AddNewMedicamentRecordCommand}" Key="F1" />
+        <KeyBinding Command="{Binding DeleteMedicamentRecordCommand}" CommandParameter="{Binding SelectedMedicamentRecord}" Key="Delete" />
+        <KeyBinding Command="{Binding EditMedicamentRecordCommand}" CommandParameter="{Binding SelectedMedicamentRecord}" Key="Enter" Modifiers="Alt"/>
     </Window.InputBindings>
     <Window.Resources>
+        <DataTemplate x:Key="IconTemplate">
+            <Button>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Image Source="../Resources/Images/icon.png" />
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
         <Converters:ListItemToIndexConverter x:Key="IndexConverter"/>
-        <Converters:BooleanAndSelectedConverter x:Key="BooleanAndSelectedConverter"/>
+        <Converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
     </Window.Resources>
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands HorizontalContentAlignment="Stretch" ShowLastSeparator="False">
+            <Button>
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconModern Kind="Settings" />
+                        <TextBlock Text="{DynamicResource r_settingsTitle}" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+    <Controls:MetroWindow.WindowButtonCommands>
+        <Controls:WindowButtonCommands Style="{DynamicResource MahApps.Metro.Styles.WindowButtonCommands.Win10}"/>
+    </Controls:MetroWindow.WindowButtonCommands>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="292*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
-            <MenuItem Header="Загрузить" Command="{Binding LoadMedicamentRecordsCommand}" IsEnabled="{Binding IsLoadedData}"/>
-            <MenuItem Header="Добавить" Command="{Binding AddNewMedicamentRecordCommand}" IsEnabled="{Binding IsLoadedData}"/>
-            <MenuItem Header="Изменить" Command="{Binding EditMedicamentRecordCommand}" CommandParameter="{Binding SelectedMedicamentRecord}" IsEnabled="{Binding IsLoadedData}"/>
-            <MenuItem Header="Удалить" Command="{Binding DeleteMedicamentRecordCommand}" CommandParameter="{Binding SelectedMedicamentRecord}" IsEnabled="{Binding IsLoadedData}"/>
+            <MenuItem Icon="{iconPacks:PackIconModern ClipboardVariantEdit}" Header="{DynamicResource r_recordsTitle}">
+                <MenuItem Icon="{iconPacks:PackIconMaterial Autorenew}" Header="{DynamicResource r_loadMedicalRecordsTitle}" Command="{Binding LoadMedicamentRecordsCommand}" />
+                <MenuItem Icon="{iconPacks:PackIconEntypo NewMessage}" Header="{DynamicResource r_addMedicalRecordTitle}" Command="{Binding AddNewMedicamentRecordCommand}" IsEnabled="{Binding IsLoadedData}"/>
+            </MenuItem>
         </Menu>
-        <ListView HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding MedicamentRecords}" SelectedItem="{Binding SelectedMedicamentRecord}">
+        <ListView Name="medicamentRecordsList" MouseDown="medicamentRecordsList_MouseDown" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding MedicamentRecords}" SelectedItem="{Binding SelectedMedicamentRecord}" SelectionMode="Single">
+            <ListView.Resources>
+                <ContextMenu x:Key="contextMenu">
+                    <MenuItem Icon="{iconPacks:PackIconEntypo Edit}" Header="{DynamicResource r_editMedicalRecordTitle}" Command="{Binding Path=DataContext.EditMedicamentRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding Path=DataContext.SelectedMedicamentRecord, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"/>
+                    <MenuItem  Icon="{iconPacks:PackIconMaterialLight Delete}" Header="{DynamicResource r_deleteMedicalRecordTitle}" Command="{Binding Path=DataContext.DeleteMedicamentRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding Path=DataContext.SelectedMedicamentRecord, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"/>
+                </ContextMenu>
+            </ListView.Resources>
+            <ListView.ItemContainerStyle>
+                <Style TargetType ="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="ContextMenu" Value="{StaticResource contextMenu}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
-                        <GridViewColumn Header="№" DisplayMemberBinding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"/>
-                        <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Medicament.Name}"/>
-                        <GridViewColumn Header="Производитель" DisplayMemberBinding="{Binding Medicament.Manufacturer.Name}"/>
-                        <GridViewColumn Header="Цена за единицу" DisplayMemberBinding="{Binding Medicament.Price, StringFormat={}{0} грн}"/>
-                        <GridViewColumn Header="Количество" DisplayMemberBinding="{Binding Count}"/>
-                        <GridViewColumn Header="Сумма" DisplayMemberBinding="{Binding Amount, StringFormat={}{0} грн}"/>
-                        <GridViewColumn Header="Дата получения" DisplayMemberBinding="{Binding Received, StringFormat=d}"/>
+                        <GridViewColumn Header="" Width="32">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Path Width="18" Height="18" Stretch="Fill" Fill="#FF000000" Data="F1 M 20.2466,42.3184L 42.3184,20.2466C 46.0284,16.5366 52.0434,16.5366 55.7534,20.2466C 59.4634,23.9565 59.4634,29.9716 55.7534,33.6816L 33.6816,55.7534C 29.9716,59.4634 23.9566,59.4634 20.2466,55.7534C 16.5366,52.0434 16.5366,46.0284 20.2466,42.3184 Z M 34.6561,33.222L 42.7098,41.2757L 51.9642,32.0214C 54.1882,29.7974 54.5383,25.8415 52.3143,23.6175C 50.0903,21.3935 46.4845,21.3935 44.2605,23.6175L 34.6561,33.222 Z "/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="{DynamicResource r_listViewId}" DisplayMemberBinding="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}, Converter={StaticResource IndexConverter}}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewName}" DisplayMemberBinding="{Binding Medicament.Name}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewManufacturer}" DisplayMemberBinding="{Binding Medicament.Manufacturer.Name}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewUnitPrice}" DisplayMemberBinding="{Binding Medicament.Price, StringFormat={}{0} грн}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewNumber}" DisplayMemberBinding="{Binding Count}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewUnit}" DisplayMemberBinding="{Binding Medicament.Unit, Converter={StaticResource EnumToStringConverter}}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewAmount}" Width="75" DisplayMemberBinding="{Binding Amount, StringFormat={}{0} грн}"/>
+                        <GridViewColumn Header="{DynamicResource r_listViewReceived}" DisplayMemberBinding="{Binding Received, StringFormat=d}"/>
                     </GridView.Columns>
                 </GridView>
             </ListView.View>
         </ListView>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem HorizontalAlignment="Center" VerticalContentAlignment="Center">
+                <TextBlock Text="{Binding MedicamentRecords.Count, StringFormat={}Всего: {0} шт., Mode=OneWay}"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Controls:MetroWindow>

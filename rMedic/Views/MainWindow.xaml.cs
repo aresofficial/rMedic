@@ -17,6 +17,7 @@ using rMedic.Models;
 using rMedic.ViewModels;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using System.Globalization;
 
 namespace rMedic.Views
 {
@@ -28,7 +29,27 @@ namespace rMedic.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            App.LanguageChanged += App_LanguageChanged;
+            CultureInfo currentLanguage = App.SelectedLanguage;
+            App.SelectedLanguage = new CultureInfo("en-US");
+            App.SelectedLanguage = new CultureInfo("ru-RU");
             DataContext = new MainWindowViewModel();
         }
+
+        private void App_LanguageChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show("Сменили язык.");
+        }
+
+        private void medicamentRecordsList_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+            if (r.VisualHit.GetType() != typeof(ListBoxItem))
+            {
+                medicamentRecordsList.UnselectAll();
+            }
+        }
+
     }
 }

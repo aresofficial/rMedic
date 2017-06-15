@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:System;assembly=mscorlib"
+                    xmlns:local="clr-namespace:rMedic.Resources">
+    <v:String x:Key="r_recordsTitle">Records</v:String>
+    <v:String x:Key="r_addMedicalRecordTitle">Add new</v:String>
+    <v:String x:Key="r_editMedicalRecordTitle">Edit</v:String>
+    <v:String x:Key="r_deleteMedicalRecordTitle">Delete</v:String>
+    <v:String x:Key="r_loadMedicalRecordsTitle">Update data</v:String>
+    <v:String x:Key="r_versionTitle">version</v:String>
+    <v:String x:Key="r_settingsTitle">Settings</v:String>
+
+    <v:String x:Key="r_listViewId">#</v:String>
+    <v:String x:Key="r_listViewName">Name of the preparation</v:String>
+    <v:String x:Key="r_listViewManufacturer">Menufacturer</v:String>
+    <v:String x:Key="r_listViewUnitPrice">Unit price</v:String>
+    <v:String x:Key="r_listViewUnit">Unit</v:String>
+    <v:String x:Key="r_listViewNumber">Number</v:String>
+    <v:String x:Key="r_listViewAmount">Amount</v:String>
+    <v:String x:Key="r_listViewReceived">Received</v:String>
+
+    <v:String x:Key="r_unit_Millimeters">Millimeters</v:String>
+    <v:String x:Key="r_unit_Centimeters">Centimeters</v:String>
+    <v:String x:Key="r_unit_Meters">Meters</v:String>
+    <v:String x:Key="r_unit_Suppositories">Suppositories</v:String>
+    <v:String x:Key="r_unit_Pills">Pills</v:String>
+    <v:String x:Key="r_unit_Tubes">Tubes</v:String>
+    <v:String x:Key="r_unit_Packs">Packs</v:String>
+    <v:String x:Key="r_unit_Vials">Vials</v:String>
+    <v:String x:Key="r_unit_Pieces">Pieces</v:String>
+    <v:String x:Key="r_unit_Ampoules">Ampoules</v:String>
+    <v:String x:Key="r_unit_Bottles">Bottles</v:String>
+</ResourceDictionary>

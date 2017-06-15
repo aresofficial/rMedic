@@ -1,17 +1,31 @@
-﻿namespace rMedic.Models
+﻿using rMedic.ViewModels.Attributes;
+
+namespace rMedic.Models
 {
     public enum Unit {
-        Millimeter, //милиметр
-        Centimeter, //сантиметр
-        Meter, //метр
-        Suppository, //свечи
+        [LocalizedDescription("Millimeters")]
+        Millimeters, //милиметр
+        [LocalizedDescription("Centimeters")]
+        Centimeters, //сантиметр
+        [LocalizedDescription("Meters")]
+        Meters, //метр
+        [LocalizedDescription("Suppositories")]
+        Suppositories, //свечи
+        [LocalizedDescription("Pills")]
         Pills, //таблетки
-        Tube, //тюбик
-        Pack, //упаковка
-        Vial, //флакон
-        Items, //штуки
-        Liter, //литры
-        Ampoule, //ампулы
-        Bottle //бутылки
+        [LocalizedDescription("Tubes")]
+        Tubes, //тюбик
+        [LocalizedDescription("Packs")]
+        Packs, //упаковка
+        [LocalizedDescription("Vials")]
+        Vials, //флакон
+        [LocalizedDescription("Pieces")]
+        Pieces, //штуки
+        [LocalizedDescription("Liters")]
+        Liters, //литры
+        [LocalizedDescription("Ampoules")]
+        Ampoules, //ампулы
+        [LocalizedDescription("Bottles")]
+        Bottles //бутылки
     }
 }

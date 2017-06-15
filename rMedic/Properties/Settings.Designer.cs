@@ -25,10 +25,22 @@ namespace rMedic.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.0.1 alpha")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0.1")]
         public string Version {
             get {
                 return ((string)(this["Version"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("(Default)")]
+        public global::System.Globalization.CultureInfo Language {
+            get {
+                return ((global::System.Globalization.CultureInfo)(this["Language"]));
+            }
+            set {
+                this["Language"] = value;
             }
         }
     }

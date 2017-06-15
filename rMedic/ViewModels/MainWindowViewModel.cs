@@ -24,7 +24,10 @@ namespace rMedic.ViewModels
         private ICommand _loadMedicamentRecordsCommand;
         private ICommand _editMedicamentRecordCommand;
         private ICommand _deleteMedicamentRecordCommand;
-        private bool _isLoadedData = false;
+        private bool _isLoadedData = true;
+        private bool _isDeleteMedicamentRecord = true;
+        private bool _isEditMedicamentRecord = true;
+        private bool _isAddedMedicamentRecord = true;
         private MedicamentRecord _selectedMedicamentRecord;
         #endregion
 
@@ -68,6 +71,9 @@ namespace rMedic.ViewModels
             set { _selectedMedicamentRecord = value; OnPropertyChanged(); }
         }
 
+        public bool IsDeleteMedicamentRecord { get => _isDeleteMedicamentRecord; set { _isDeleteMedicamentRecord = value; OnPropertyChanged(); } }
+        public bool IsEditMedicamentRecord { get => _isEditMedicamentRecord; set { _isEditMedicamentRecord = value; OnPropertyChanged(); } }
+        public bool IsAddedMedicamentRecord { get => _isAddedMedicamentRecord; set { _isAddedMedicamentRecord = value; OnPropertyChanged(); } }
         #endregion
 
         #region Constructor
@@ -77,10 +83,10 @@ namespace rMedic.ViewModels
             MedicamentRecords = new ObservableCollection<MedicamentRecord>();
             BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamenRecordsLock);
 
-            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord);
-            LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords);
-            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param));
-            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param));
+            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
+            LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords, can => IsLoadedData);
+            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsEditMedicamentRecord);
+            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsDeleteMedicamentRecord);
 
             AddMedicamentRecordEvent += MainWindowViewModel_AddMedicamentRecord;
             EditMedicamentRecordEvent += MainWindowViewModel_EditMedicamentRecordEvent;
@@ -104,7 +110,7 @@ namespace rMedic.ViewModels
                         Price = 54.82m,
                         ManufacturerId = 1,
                         Description = "desc",
-                        Unit = Unit.Bottle
+                        Unit = Unit.Bottles
                     },
                     Count = 2.5,
                     Received = DateTime.Now,
@@ -119,16 +125,16 @@ namespace rMedic.ViewModels
         private async Task LoadMedicamentRecords(object param)
         {
             //Example data for testing command
+            IsLoadedData = false;
             await Task.Run(() =>
             {
                 MedicamentRecords.Clear();
-                IsLoadedData = false;
                 foreach (var item in Context.MedicamentRecords)
                 {
                     MedicamentRecords.Add(item);
                 }
-                IsLoadedData = true;
             });
+            IsLoadedData = true;
         }
 
         private async Task EditMedicamentRecord(object param)
@@ -136,6 +142,7 @@ namespace rMedic.ViewModels
             //Example data for testing command
             if (param != null)
             {
+                IsEditMedicamentRecord = false;
                 var med = param as MedicamentRecord;
                 var input = await MetroDialogsHelper.ShowInputAsync(
                     "Введите количество:",
@@ -155,6 +162,7 @@ namespace rMedic.ViewModels
                         EditMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
                 }
+                IsEditMedicamentRecord = true;
             }
         }
 
@@ -162,13 +170,13 @@ namespace rMedic.ViewModels
         {
             if (param != null)
             {
+                IsDeleteMedicamentRecord = false;
                 var med = param as MedicamentRecord;
-                var res = await MetroDialogsHelper.ShowMessageAsync("Удаление записи",
-                    string.Format($"Вы действительно хотите удалить данную запись?\n" +
+                var res = await MetroDialogsHelper.ShowMessageAsync("Вы действительно хотите удалить данную запись?",
                     $"Название: {med.Medicament.Name}\n" +
                     $"Производитель: {med.Medicament.Manufacturer.Name}\n" +
                     $"Цена: {med.Medicament.Price}\n" +
-                    $"Количество: {med.Count}"),
+                    $"Количество: {med.Count}",
                     MessageDialogStyle.AffirmativeAndNegative,
                     new MetroDialogSettings
                     {
@@ -184,26 +192,27 @@ namespace rMedic.ViewModels
                         DeleteMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
                 }
+                IsDeleteMedicamentRecord = true;
             }
         }
 
         private void MainWindowViewModel_AddMedicamentRecord(object sender, MedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Add(e.Record);
-            Context.SaveChangesAsync();
+            Context.SaveChanges();
         }
 
         private void MainWindowViewModel_DeleteMedicamentRecordEvent(object sender, MedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Remove(e.Record);
-            Context.SaveChangesAsync();
+            Context.SaveChanges();
         }
 
         private void MainWindowViewModel_EditMedicamentRecordEvent(object sender, MedicamentRecordEventArgs e)
         {
             var record = Context.MedicamentRecords.Find(e.Record.Id);
             record = e.Record;
-            Context.SaveChangesAsync();
+            Context.SaveChanges();
         }
         #endregion
     }
