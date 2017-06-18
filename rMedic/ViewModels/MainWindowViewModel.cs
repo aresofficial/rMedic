@@ -128,8 +128,14 @@ namespace rMedic.ViewModels
                 }
                 else
                 {
-                    FilteredMedicamentRecords.Filter = new Predicate<object>(o => (o as MedicamentRecord).ToString().Contains(value.ToLower()));
-                }
+                    Task.Run(() =>
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            FilteredMedicamentRecords.Filter = new Predicate<object>(o => (o as MedicamentRecord).ToString().Contains(value.ToLower()));
+                        }), DispatcherPriority.Background);
+                        });
+                    }
             }
         }
 

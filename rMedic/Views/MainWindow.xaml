@@ -93,14 +93,18 @@
                         Icon="{iconPacks:PackIconEntypo NewMessage}"
                         IsEnabled="{Binding IsLoadedData}" />
                 </MenuItem>
-                <MenuItem Header="Preparations" Icon="{iconPacks:PackIconMaterial Pill}" />
-                <MenuItem Header="Manufacturers" Icon="{iconPacks:PackIconMaterial Domain}" />
+                <MenuItem Header="{DynamicResource r_preparationsTitle}" Icon="{iconPacks:PackIconMaterial Pill}" />
+                <MenuItem Header="{DynamicResource r_manufacturersTitle}" Icon="{iconPacks:PackIconMaterial Domain}" />
             </Menu>
             <StackPanel
                 HorizontalAlignment="Right"
                 Orientation="Horizontal"
                 TextBlock.FontSize="14">
-                <TextBlock VerticalAlignment="Center" Text="Поиск:" />
+                <TextBlock
+                    Height="Auto"
+                    Margin="0,-1,0,0"
+                    VerticalAlignment="Center"
+                    Text="{DynamicResource r_searchTitle}" />
                 <TextBox
                     Width="200"
                     Height="20"
