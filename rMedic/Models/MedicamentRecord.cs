@@ -55,5 +55,16 @@ namespace rMedic.Models
             }
         }
         #endregion
+
+        #region Override Methods
+        /// <summary>
+        /// This method need for search
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{Count}, {Received}, {Expiration}, {Amount}, {Medicament.Name}, {Medicament.Price}, {Medicament.Description}, {Medicament.Manufacturer.Name}".ToLower();
+        }
+        #endregion
     }
 }

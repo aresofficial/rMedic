@@ -1,14 +1,12 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
+﻿using MahApps.Metro.Controls.Dialogs;
 using rMedic.Data;
 using rMedic.Helpers;
 using rMedic.Models;
 using rMedic.Models.Events;
 using rMedic.Views;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,21 +19,25 @@ namespace rMedic.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private Fields
+        private ObservableCollection<MedicamentRecord> _medicamentRecords;
         private object _medicamentRecordsLock = new object();
+        private MedicamentRecord _selectedMedicamentRecord;
+
         private ICommand _addNewMedicamentRecordCommand;
         private ICommand _loadMedicamentRecordsCommand;
         private ICommand _editMedicamentRecordCommand;
         private ICommand _deleteMedicamentRecordCommand;
+
         private bool _isLoadedData = true;
         private bool _isDeleteMedicamentRecord = true;
         private bool _isEditMedicamentRecord = true;
         private bool _isAddedMedicamentRecord = true;
-        private MedicamentRecord _selectedMedicamentRecord;
 
         private double _fullAmount = 0;
         private double _fullNumber = 0;
-        private string _randomWatermark = string.Empty;
-        private ObservableCollection<MedicamentRecord> _medicamentRecords;
+
+        private string _randomWatermark;
+        private string _searchString;
         #endregion
 
         #region Events
@@ -52,6 +54,8 @@ namespace rMedic.ViewModels
             get => _medicamentRecords;
             set { _medicamentRecords = value; OnPropertyChanged(); }
         }
+
+        public ICollectionView FilteredMedicamentRecords { get; set; }
 
         public ICommand AddNewMedicamentRecordCommand
         {
@@ -112,6 +116,23 @@ namespace rMedic.ViewModels
             }
         }
 
+        public string SearchString
+        {
+            get => _searchString;
+            set
+            {
+                _searchString = value; OnPropertyChanged();
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    FilteredMedicamentRecords.Filter = null;
+                }
+                else
+                {
+                    FilteredMedicamentRecords.Filter = new Predicate<object>(o => (o as MedicamentRecord).ToString().Contains(value.ToLower()));
+                }
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -120,6 +141,8 @@ namespace rMedic.ViewModels
             Context = new RMedicDbContext();
             MedicamentRecords = new ObservableCollection<MedicamentRecord>();
             BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamentRecordsLock);
+
+            FilteredMedicamentRecords = CollectionViewSource.GetDefaultView(MedicamentRecords);
 
             AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
             //AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
@@ -264,7 +287,9 @@ namespace rMedic.ViewModels
                 IsDeleteMedicamentRecord = true;
             }
         }
+        #endregion
 
+        #region Event Handlers
         private void MainWindowViewModel_AddMedicamentRecord(object sender, MedicamentRecordEventArgs e)
         {
             Context.MedicamentRecords.Add(e.Record);
