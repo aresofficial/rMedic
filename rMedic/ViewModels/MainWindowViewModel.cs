@@ -8,6 +8,7 @@ using rMedic.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,7 +21,7 @@ namespace rMedic.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region Private Fields
-        private object _medicamenRecordsLock = new object();
+        private object _medicamentRecordsLock = new object();
         private ICommand _addNewMedicamentRecordCommand;
         private ICommand _loadMedicamentRecordsCommand;
         private ICommand _editMedicamentRecordCommand;
@@ -33,6 +34,8 @@ namespace rMedic.ViewModels
 
         private double _fullAmount = 0;
         private double _fullNumber = 0;
+        private string _randomWatermark = string.Empty;
+        private ObservableCollection<MedicamentRecord> _medicamentRecords;
         #endregion
 
         #region Events
@@ -44,7 +47,11 @@ namespace rMedic.ViewModels
         #region Public Properties
         public RMedicDbContext Context { get; set; }
 
-        public ObservableCollection<MedicamentRecord> MedicamentRecords { get; set; }
+        public ObservableCollection<MedicamentRecord> MedicamentRecords
+        {
+            get => _medicamentRecords;
+            set { _medicamentRecords = value; OnPropertyChanged(); }
+        }
 
         public ICommand AddNewMedicamentRecordCommand
         {
@@ -95,6 +102,16 @@ namespace rMedic.ViewModels
                 _fullNumber = value; OnPropertyChanged();
             }
         }
+
+        public string RandomWatermark
+        {
+            get => _randomWatermark;
+            set
+            {
+                _randomWatermark = value; OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -102,13 +119,13 @@ namespace rMedic.ViewModels
         {
             Context = new RMedicDbContext();
             MedicamentRecords = new ObservableCollection<MedicamentRecord>();
-            BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamenRecordsLock);
+            BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamentRecordsLock);
 
-            //AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
-            AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
+            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
+            //AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
             LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords, can => IsLoadedData);
-            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsEditMedicamentRecord);
-            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsDeleteMedicamentRecord);
+            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsLoadedData);
+            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsLoadedData);
 
             AddMedicamentRecordEvent += MainWindowViewModel_AddMedicamentRecord;
             EditMedicamentRecordEvent += MainWindowViewModel_EditMedicamentRecordEvent;
@@ -134,14 +151,7 @@ namespace rMedic.ViewModels
             {
                 var medicRecord = new MedicamentRecord
                 {
-                    Medicament = new Medicament
-                    {
-                        Name = "test",
-                        Price = 54.82m,
-                        ManufacturerId = 1,
-                        Description = "desc",
-                        Unit = Unit.Bottles
-                    },
+                    MedicamentId = 2,
                     Count = 2.5,
                     Received = DateTime.Now,
                     Expiration = DateTime.Now
@@ -162,21 +172,35 @@ namespace rMedic.ViewModels
             });
         }
 
+        private async Task LoadRandomWatermark()
+        {
+            await Task.Run(() =>
+            {
+                Random r = new Random();
+                RandomWatermark = $"Например: {MedicamentRecords[r.Next(0, MedicamentRecords.Count)].Medicament.Name}";
+            });
+        }
+
         private async Task LoadMedicamentRecords(object param)
         {
             //Example data for testing command
             IsLoadedData = false;
+
+            if (MedicamentRecords.Count > 0) MedicamentRecords.Clear();
             await Task.Factory.StartNew(() =>
             {
-                MedicamentRecords.Clear();
                 foreach (var item in Context.MedicamentRecords)
                 {
-                    MedicamentRecords.Add(item);
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        MedicamentRecords.Add(item); //Adding to Collection without freezing UI
+                    }), DispatcherPriority.Background).Wait(); //WaitForAdding
                 }
             });
             IsLoadedData = true;
-            await Task.Delay(3000);
-            await LoadFullAmountAndNumber();
+
+            await LoadFullAmountAndNumber(); //Then Show Total
+            await LoadRandomWatermark();//And Watermark of Search
         }
 
         private async Task EditMedicamentRecord(object param)
@@ -231,6 +255,7 @@ namespace rMedic.ViewModels
                 {
                     await Task.Run(() =>
                     {
+                        BindingOperations.EnableCollectionSynchronization(MedicamentRecords, _medicamentRecordsLock);
                         MedicamentRecords.Remove(med);
                         DeleteMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });

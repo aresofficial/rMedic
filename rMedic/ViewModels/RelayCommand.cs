@@ -42,6 +42,8 @@ namespace rMedic.ViewModels
         /// <summary>
         /// Can Executed Changed Event
         /// </summary>
+        /// 
+
         public event EventHandler CanExecuteChanged
         {
             add

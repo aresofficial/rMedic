@@ -37,7 +37,7 @@
         </DataTemplate>
         <Converters:ListItemToIndexConverter x:Key="IndexConverter"/>
         <Converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
-        <Converters:TotalConverter x:Key="TotalConverter"/>
+        <Converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </Window.Resources>
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands HorizontalContentAlignment="Stretch" ShowLastSeparator="False">
@@ -60,15 +60,28 @@
             <RowDefinition Height="292*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0">
-            <MenuItem Icon="{iconPacks:PackIconModern ClipboardVariantEdit}" Header="{DynamicResource r_recordsTitle}">
-                <MenuItem Icon="{iconPacks:PackIconMaterial Autorenew}" Header="{DynamicResource r_loadMedicalRecordsTitle}" Command="{Binding LoadMedicamentRecordsCommand}" />
-                <MenuItem Icon="{iconPacks:PackIconEntypo NewMessage}" Header="{DynamicResource r_addMedicalRecordTitle}" Command="{Binding AddNewMedicamentRecordCommand}" IsEnabled="{Binding IsLoadedData}"/>
-            </MenuItem>
-        </Menu>
+        <DockPanel HorizontalAlignment="Stretch">
+            <Menu Grid.Row="0">
+                <MenuItem Icon="{iconPacks:PackIconModern ClipboardVariantEdit}" Header="{DynamicResource r_recordsTitle}">
+                    <MenuItem Icon="{iconPacks:PackIconMaterial Autorenew}" Header="{DynamicResource r_loadMedicalRecordsTitle}" Command="{Binding LoadMedicamentRecordsCommand}" />
+                    <Separator Margin="-20,-6"/>
+                    <MenuItem Icon="{iconPacks:PackIconEntypo NewMessage}" Header="{DynamicResource r_addMedicalRecordTitle}" Command="{Binding AddNewMedicamentRecordCommand}" IsEnabled="{Binding IsLoadedData}"/>
+                </MenuItem>
+                <MenuItem Icon="{iconPacks:PackIconMaterial Pill}" Header="Preparations">
+                </MenuItem>
+                <MenuItem Icon="{iconPacks:PackIconMaterial Domain}" Header="Manufacturers">
+               </MenuItem>
+            </Menu>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" TextBlock.FontSize="14">
+            <TextBlock VerticalAlignment="Center" Text="Поиск:"/>
+                <TextBox IsEnabled="{Binding Path=IsLoadedData}" Margin="5,0" Text="" Height="20" VerticalContentAlignment="Center" Width="200" Controls:TextBoxHelper.AutoWatermark="True" Controls:TextBoxHelper.Watermark="{Binding RandomWatermark, Mode=TwoWay}"/>
+            </StackPanel>
+        </DockPanel>
         <ListView Name="medicamentRecordsList" MouseDown="medicamentRecordsList_MouseDown" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" ItemsSource="{Binding MedicamentRecords}" SelectedItem="{Binding SelectedMedicamentRecord}" SelectionMode="Single">
             <ListView.Resources>
                 <ContextMenu x:Key="contextMenu">
+                    <MenuItem Icon="{iconPacks:PackIconMaterial InformationOutline}" Header="Информация" Command="{Binding Path=DataContext.EditMedicamentRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding Path=DataContext.SelectedMedicamentRecord, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"/>
+                    <Separator Margin="-20,-6"/>
                     <MenuItem Icon="{iconPacks:PackIconEntypo Edit}" Header="{DynamicResource r_editMedicalRecordTitle}" Command="{Binding Path=DataContext.EditMedicamentRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding Path=DataContext.SelectedMedicamentRecord, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"/>
                     <MenuItem  Icon="{iconPacks:PackIconMaterialLight Delete}" Header="{DynamicResource r_deleteMedicalRecordTitle}" Command="{Binding Path=DataContext.DeleteMedicamentRecordCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding Path=DataContext.SelectedMedicamentRecord, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}"/>
                 </ContextMenu>
@@ -105,15 +118,18 @@
                 <TextBlock Text="{Binding MedicamentRecords.Count, StringFormat={}Записей: {0} шт., Mode=OneWay}"/>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-            <StackPanel Orientation="Horizontal">
-            <StatusBarItem HorizontalAlignment="Center" VerticalContentAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <StatusBarItem HorizontalAlignment="Center" VerticalContentAlignment="Center">
                 <TextBlock Text="{Binding FullNumber, StringFormat={}Количество: {0} ед.}"/>
             </StatusBarItem>
                     <Border Width="1" Margin="4" Background="#ffffff"/>
                     <StatusBarItem Margin="0,0,0,0" HorizontalAlignment="Right" VerticalContentAlignment="Center">
                 <TextBlock Text="{Binding FullAmount, StringFormat={}Сумма: {0} грн.}"/>
             </StatusBarItem>
-            </StackPanel>
+                    <StatusBarItem>
+                        <iconPacks:PackIconMaterial Kind="Autorenew" Spin="{Binding IsLoadedData,Converter={StaticResource InverseBooleanConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="20" Height="20"/>
+                    </StatusBarItem>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>

@@ -106,6 +106,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\EnumToStringConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\ListItemToIndexConverter.cs" />
     <Compile Include="Converters\TotalConverter.cs" />
     <Compile Include="Data\RMedicDbContext.cs" />
