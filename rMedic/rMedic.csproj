@@ -85,6 +85,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Resources\Language.uk-UA.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\Language.ru-RU.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,6 +116,7 @@
     <Compile Include="Data\RMedicDbContext.cs" />
     <Compile Include="Data\RMedicDbInitializer.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\Localization.cs" />
     <Compile Include="Helpers\MetroDialogsHelper.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Events\MedicamentRecordEventArgs.cs" />

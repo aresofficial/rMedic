@@ -110,7 +110,7 @@
                     Height="20"
                     Margin="5,0"
                     VerticalContentAlignment="Center"
-                    Controls:TextBoxHelper.Watermark="{Binding RandomWatermark, Mode=TwoWay}"
+                    Controls:TextBoxHelper.Watermark="{Binding RandomWatermark, StringFormat={}Например: {0}, TargetNullValue=Загрузка..., Mode=TwoWay}"
                     IsEnabled="{Binding Path=IsLoadedData}"
                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
@@ -175,6 +175,7 @@
                             DisplayMemberBinding="{Binding Amount, StringFormat={}{0} грн}"
                             Header="{DynamicResource r_listViewAmount}" />
                         <GridViewColumn DisplayMemberBinding="{Binding Received, StringFormat=d}" Header="{DynamicResource r_listViewReceived}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Expiration, StringFormat=d}" Header="{DynamicResource r_listViewExpiration}" />
                     </GridView.Columns>
                 </GridView>
             </ListView.View>

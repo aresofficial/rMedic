@@ -44,6 +44,9 @@ namespace rMedic
 
                 switch (value.Name)
                 {
+                    case "uk-UA":
+                        dictionary.Source = new Uri($"Resources/Language.{value.Name}.xaml", UriKind.Relative);
+                        break;
                     case "ru-RU":
                         dictionary.Source = new Uri($"Resources/Language.{value.Name}.xaml", UriKind.Relative);
                         break;

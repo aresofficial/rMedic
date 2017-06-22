@@ -25,6 +25,7 @@
     <v:String x:Key="r_listViewNumber">Number</v:String>
     <v:String x:Key="r_listViewAmount">Amount</v:String>
     <v:String x:Key="r_listViewReceived">Received</v:String>
+    <v:String x:Key="r_listViewExpiration">Expiration</v:String>
 
     <v:String x:Key="r_unit_Millimeters">Millimeters</v:String>
     <v:String x:Key="r_unit_Centimeters">Centimeters</v:String>

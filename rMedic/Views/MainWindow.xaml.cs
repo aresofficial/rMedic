@@ -34,7 +34,9 @@ namespace rMedic.Views
             CultureInfo currentLanguage = App.SelectedLanguage;
             App.SelectedLanguage = new CultureInfo("en-US");
             App.SelectedLanguage = new CultureInfo("ru-RU");
+            //App.SelectedLanguage = new CultureInfo("uk-UA");
             DataContext = new MainWindowViewModel();
+
         }
 
         private void App_LanguageChanged(object sender, EventArgs e)

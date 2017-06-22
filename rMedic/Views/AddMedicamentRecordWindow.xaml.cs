@@ -26,11 +26,11 @@ namespace rMedic.Views
     /// </summary>
     public partial class AddMedicamentRecordWindow : MetroWindow
     {
-        public AddMedicamentRecordWindow()
+        public AddMedicamentRecordWindow(MainWindowViewModel model)
         {
             InitializeComponent();
 
-            DataContext = new AddMedicamentRecordViewModel();
+            DataContext = new AddMedicamentRecordViewModel(model);
         }
     }
 }

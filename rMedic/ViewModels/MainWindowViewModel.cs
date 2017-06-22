@@ -150,8 +150,8 @@ namespace rMedic.ViewModels
 
             FilteredMedicamentRecords = CollectionViewSource.GetDefaultView(MedicamentRecords);
 
-            AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
-            //AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
+            //AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
+            AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
             LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords, can => IsLoadedData);
             EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsLoadedData);
             DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsLoadedData);
@@ -168,7 +168,7 @@ namespace rMedic.ViewModels
 
         private void AddTest(object param)
         {
-            AddMedicamentRecordWindow addWindow = new AddMedicamentRecordWindow();
+            AddMedicamentRecordWindow addWindow = new AddMedicamentRecordWindow(this);
             addWindow.Owner = Application.Current.MainWindow;
             addWindow.ShowDialog();
         }
@@ -206,7 +206,7 @@ namespace rMedic.ViewModels
             await Task.Run(() =>
             {
                 Random r = new Random();
-                RandomWatermark = $"Например: {MedicamentRecords[r.Next(0, MedicamentRecords.Count)].Medicament.Name}";
+                RandomWatermark = MedicamentRecords[r.Next(0, MedicamentRecords.Count)].Medicament.Name;
             });
         }
 

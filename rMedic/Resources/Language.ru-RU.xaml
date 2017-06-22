@@ -25,6 +25,7 @@
     <v:String x:Key="r_listViewNumber">Количество</v:String>
     <v:String x:Key="r_listViewAmount">Сумма</v:String>
     <v:String x:Key="r_listViewReceived">Дата получения</v:String>
+    <v:String x:Key="r_listViewExpiration">Срок годности</v:String>
 
     <v:String x:Key="r_unit_Millimeters">Милиметры</v:String>
     <v:String x:Key="r_unit_Centimeters">Сантиметры</v:String>
