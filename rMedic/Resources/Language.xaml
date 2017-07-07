@@ -38,4 +38,6 @@
     <v:String x:Key="r_unit_Pieces">Pieces</v:String>
     <v:String x:Key="r_unit_Ampoules">Ampoules</v:String>
     <v:String x:Key="r_unit_Bottles">Bottles</v:String>
+
+    <v:String x:Key="r_dialogSave">Save</v:String>
 </ResourceDictionary>

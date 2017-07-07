@@ -38,4 +38,6 @@
     <v:String x:Key="r_unit_Pieces">Штуки</v:String>
     <v:String x:Key="r_unit_Ampoules">Ампулы</v:String>
     <v:String x:Key="r_unit_Bottles">Бутылки</v:String>
+
+    <v:String x:Key="r_dialogSave">Сохранить</v:String>
 </ResourceDictionary>

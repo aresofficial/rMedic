@@ -1,11 +1,9 @@
 ﻿using MahApps.Metro.Controls;
-using rMedic.Data;
+using MahApps.Metro.Controls.Dialogs;
 using rMedic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace rMedic.ViewModels
@@ -22,27 +20,28 @@ namespace rMedic.ViewModels
         public DateTime SelectedReceived { get; set; } = DateTime.Now;
         public DateTime SelectedExpiration { get; set; } = DateTime.Now;
 
-        public ICommand ReturnTestCommand { get => _returnTestCommand; set => _returnTestCommand = value; }
+        public ICommand AddMedicamentCommand { get => _returnTestCommand; set => _returnTestCommand = value; }
 
         public AddMedicamentRecordViewModel(MainWindowViewModel model)
         {
             Model = model;
             Medicaments = Model.Context.Medicaments.ToList();
 
-            ReturnTestCommand = new RelayCommand(param => ReturnTest(param));
+            AddMedicamentCommand = new RelayCommand(param => AddMedicamentRecord(param));
         }
 
-        private void ReturnTest(object param)
+        private async void AddMedicamentRecord(object param)
         {
-            var record = new MedicamentRecord
-            {
-                Medicament = SelectedMedicament,
-                Count = SelectedCount,
-                Received = SelectedReceived,
-                Expiration = SelectedExpiration
-            };
-            Model.MedicamentRecords.Add(record);
-            (param as MetroWindow).Close();
+            //TODO: ValidationRule
+                var record = new MedicamentRecord
+                {
+                    Medicament = SelectedMedicament,
+                    Count = SelectedCount,
+                    Received = SelectedReceived,
+                    Expiration = SelectedExpiration
+                };
+                await Model.AddNewMedicamentRecordAsync(record);
+                (param as MetroWindow).Close();
         }
     }
 }

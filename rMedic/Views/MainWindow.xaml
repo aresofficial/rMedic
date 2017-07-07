@@ -17,6 +17,7 @@
     Height="570"
     MinWidth="1040"
     MinHeight="570"
+    IsCloseButtonEnabled="{Binding IsLoadedData}"
     d:DataContext="{d:DesignInstance Type=ViewModels:MainWindowViewModel}"
     GlowBrush="{DynamicResource AccentColorBrush}"
     IconTemplate="{DynamicResource IconTemplate}"

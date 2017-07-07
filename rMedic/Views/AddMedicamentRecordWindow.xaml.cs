@@ -32,5 +32,10 @@ namespace rMedic.Views
 
             DataContext = new AddMedicamentRecordViewModel(model);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -151,10 +151,10 @@ namespace rMedic.ViewModels
             FilteredMedicamentRecords = CollectionViewSource.GetDefaultView(MedicamentRecords);
 
             //AddNewMedicamentRecordCommand = new AsyncDelegateCommand(AddNewMedicamentRecord, can => IsAddedMedicamentRecord);
-            AddNewMedicamentRecordCommand = new RelayCommand(AddTest);
-            LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecords, can => IsLoadedData);
-            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecord(param), can => IsLoadedData);
-            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecord(param), can => IsLoadedData);
+            AddNewMedicamentRecordCommand = new RelayCommand(AddMedicamentRecordWindowOpen);
+            LoadMedicamentRecordsCommand = new AsyncDelegateCommand(LoadMedicamentRecordsAsync, can => IsLoadedData);
+            EditMedicamentRecordCommand = new AsyncDelegateCommand(param => EditMedicamentRecordAsync(param), can => IsLoadedData);
+            DeleteMedicamentRecordCommand = new AsyncDelegateCommand(param => DeleteMedicamentRecordAsync(param), can => IsLoadedData);
 
             AddMedicamentRecordEvent += MainWindowViewModel_AddMedicamentRecord;
             EditMedicamentRecordEvent += MainWindowViewModel_EditMedicamentRecordEvent;
@@ -166,33 +166,25 @@ namespace rMedic.ViewModels
 
         #region Private Methods
 
-        private void AddTest(object param)
+        private void AddMedicamentRecordWindowOpen(object param)
         {
             AddMedicamentRecordWindow addWindow = new AddMedicamentRecordWindow(this);
             addWindow.Owner = Application.Current.MainWindow;
             addWindow.ShowDialog();
         }
 
-        private async Task AddNewMedicamentRecord(object param)
+        public async Task AddNewMedicamentRecordAsync(MedicamentRecord record)
         {
             //Example data for testing command
             await Task.Run(() =>
             {
-                var medicRecord = new MedicamentRecord
-                {
-                    MedicamentId = 2,
-                    Count = 2.5,
-                    Received = DateTime.Now,
-                    Expiration = DateTime.Now
-                };
-
-                MedicamentRecords.Add(medicRecord);
-                AddMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = medicRecord });
+                MedicamentRecords.Add(record);
+                AddMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = record });
             });
-            await LoadFullAmountAndNumber();
+            await LoadFullAmountAndNumberAsync();
         }
 
-        private async Task LoadFullAmountAndNumber()
+        private async Task LoadFullAmountAndNumberAsync()
         {
             await Task.Run(() =>
             {
@@ -201,7 +193,7 @@ namespace rMedic.ViewModels
             });
         }
 
-        private async Task LoadRandomWatermark()
+        private async Task LoadRandomWatermarkAsync()
         {
             await Task.Run(() =>
             {
@@ -210,7 +202,8 @@ namespace rMedic.ViewModels
             });
         }
 
-        private async Task LoadMedicamentRecords(object param)
+
+        private async Task LoadMedicamentRecordsAsync(object param)
         {
             //Example data for testing command
             IsLoadedData = false;
@@ -218,21 +211,21 @@ namespace rMedic.ViewModels
             if (MedicamentRecords.Count > 0) MedicamentRecords.Clear();
             await Task.Factory.StartNew(() =>
             {
-                foreach (var item in Context.MedicamentRecords)
+                Parallel.ForEach(Context.MedicamentRecords, item =>
                 {
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         MedicamentRecords.Add(item); //Adding to Collection without freezing UI
                     }), DispatcherPriority.Background).Wait(); //WaitForAdding
-                }
+                });
             });
             IsLoadedData = true;
 
-            await LoadFullAmountAndNumber(); //Then Show Total
-            await LoadRandomWatermark();//And Watermark of Search
+            await LoadFullAmountAndNumberAsync(); //Then Show Total
+            await LoadRandomWatermarkAsync();//And Watermark of Search
         }
 
-        private async Task EditMedicamentRecord(object param)
+        private async Task EditMedicamentRecordAsync(object param)
         {
             //Example data for testing command
             if (param != null)
@@ -256,13 +249,13 @@ namespace rMedic.ViewModels
                         record.Count = double.Parse(input);
                         EditMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
-                    await LoadFullAmountAndNumber();
+                    await LoadFullAmountAndNumberAsync();
                 }
                 IsEditMedicamentRecord = true;
             }
         }
 
-        private async Task DeleteMedicamentRecord(object param)
+        private async Task DeleteMedicamentRecordAsync(object param)
         {
             if (param != null)
             {
@@ -288,7 +281,7 @@ namespace rMedic.ViewModels
                         MedicamentRecords.Remove(med);
                         DeleteMedicamentRecordEvent(this, new MedicamentRecordEventArgs() { Record = med });
                     });
-                    await LoadFullAmountAndNumber();
+                    await LoadFullAmountAndNumberAsync();
                 }
                 IsDeleteMedicamentRecord = true;
             }

@@ -167,6 +167,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\ValidationRules\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
